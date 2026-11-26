@@ -257,18 +257,15 @@ LOGO_SVG = """
 
 _ORIGINAL_LEGEND = Axes.legend
 
-def _outside_top_legend(self, *args, **kwargs):
-    # Move all legends cleanly above each subplot so they never overlap curves
-    kwargs["loc"] = "lower left"
-    kwargs["bbox_to_anchor"] = (0.0, 1.02)
+def _outside_bottom_legend(self, *args, **kwargs):
+    # Place every legend cleanly below the x-axis label so neither titles nor curves are covered
+    kwargs["loc"] = "upper center"
+    kwargs["bbox_to_anchor"] = (0.5, -0.22)
     kwargs["borderaxespad"] = 0.0
     kwargs["frameon"] = True
     kwargs["framealpha"] = 0.95
     kwargs["edgecolor"] = "#cbd5e1"
-    # Push title slightly higher to make room for the legend bar
-    current_title = self.get_title()
-    if current_title:
-        self.set_title(current_title, pad=34)
+    kwargs["fontsize"] = 8.0
     return _ORIGINAL_LEGEND(self, *args, **kwargs)
 
 
@@ -282,8 +279,7 @@ def apply_plot_style():
         "font.size": 10.5,
         "legend.fontsize": 8.0,
     })
-    Axes.legend = _outside_top_legend
-
+    Axes.legend = _outside_bottom_legend
 
 def render_sidebar_header():
     if st.session_state.get("_header_rendered", False):
