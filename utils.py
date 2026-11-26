@@ -256,17 +256,29 @@ LOGO_SVG = """
 
 
 _ORIGINAL_LEGEND = Axes.legend
+_ORIGINAL_PYPLOT = st.pyplot
 
 def _outside_bottom_legend(self, *args, **kwargs):
-    # Place every legend cleanly below the x-axis label so neither titles nor curves are covered
     kwargs["loc"] = "upper center"
-    kwargs["bbox_to_anchor"] = (0.5, -0.22)
+    kwargs["bbox_to_anchor"] = (0.5, -0.24)
     kwargs["borderaxespad"] = 0.0
     kwargs["frameon"] = True
     kwargs["framealpha"] = 0.95
     kwargs["edgecolor"] = "#cbd5e1"
     kwargs["fontsize"] = 8.0
     return _ORIGINAL_LEGEND(self, *args, **kwargs)
+
+
+def _clean_pyplot(fig=None, *args, **kwargs):
+    if fig is not None:
+        # Ensure every legend on the figure is placed below the x-axis and titles have default padding
+        for ax in fig.get_axes():
+            leg = ax.get_legend()
+            if leg is not None:
+                leg.set_bbox_to_anchor((0.5, -0.24), transform=ax.transAxes)
+                leg._loc = 9  # upper center
+        fig.tight_layout()
+    return _ORIGINAL_PYPLOT(fig, *args, **kwargs)
 
 
 def apply_plot_style():
@@ -280,6 +292,7 @@ def apply_plot_style():
         "legend.fontsize": 8.0,
     })
     Axes.legend = _outside_bottom_legend
+    st.pyplot = _clean_pyplot
 
 def render_sidebar_header():
     if st.session_state.get("_header_rendered", False):
