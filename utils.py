@@ -258,34 +258,55 @@ LOGO_SVG = """
 _ORIGINAL_LEGEND = Axes.legend
 _ORIGINAL_PYPLOT = st.pyplot
 
+
 def _outside_bottom_legend(self, *args, **kwargs):
     kwargs["loc"] = "upper center"
     kwargs["bbox_to_anchor"] = (0.5, -0.24)
     kwargs["borderaxespad"] = 0.0
     kwargs["frameon"] = True
+    kwargs["facecolor"] = "#ffffff"
     kwargs["framealpha"] = 0.95
     kwargs["edgecolor"] = "#cbd5e1"
+    kwargs["labelcolor"] = "#000000"
     kwargs["fontsize"] = 8.0
     return _ORIGINAL_LEGEND(self, *args, **kwargs)
 
 
 def _clean_pyplot(fig=None, *args, **kwargs):
     if fig is not None:
-        # Ensure every legend on the figure is placed below the x-axis and titles have default padding
+        fig.patch.set_facecolor("#ffffff")
         for ax in fig.get_axes():
+            ax.set_facecolor("#ffffff")
+            ax.title.set_color("#000000")
+            ax.xaxis.label.set_color("#000000")
+            ax.yaxis.label.set_color("#000000")
+            ax.tick_params(axis="both", colors="#000000", labelcolor="#000000")
+            for spine in ax.spines.values():
+                spine.set_edgecolor("#000000")
             leg = ax.get_legend()
             if leg is not None:
                 leg.set_bbox_to_anchor((0.5, -0.24), transform=ax.transAxes)
                 leg._loc = 9  # upper center
+                leg.get_frame().set_facecolor("#ffffff")
+                for text in leg.get_texts():
+                    text.set_color("#000000")
         fig.tight_layout()
     return _ORIGINAL_PYPLOT(fig, *args, **kwargs)
 
 
 def apply_plot_style():
     plt.rcParams.update({
-        "figure.facecolor": "white",
-        "axes.facecolor": "white",
-        "axes.edgecolor": "#333333",
+        "figure.facecolor": "#ffffff",
+        "axes.facecolor": "#ffffff",
+        "axes.edgecolor": "#000000",
+        "axes.labelcolor": "#000000",
+        "axes.titlecolor": "#000000",
+        "xtick.color": "#000000",
+        "ytick.color": "#000000",
+        "text.color": "#000000",
+        "legend.facecolor": "#ffffff",
+        "legend.edgecolor": "#cbd5e1",
+        "legend.labelcolor": "#000000",
         "axes.grid": True,
         "grid.alpha": 0.25,
         "font.size": 10.5,
