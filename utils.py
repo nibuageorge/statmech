@@ -3,19 +3,6 @@ import os
 import matplotlib.pyplot as plt
 import streamlit as st
 
-LABELS_BY_NUM = {
-    "01": "01. Thermal Contact & Sharpness of Ω⁽⁰⁾",
-    "02": "02. Entropy of Mixing & Gibbs Paradox",
-    "03": "03. 3N Hypersphere & Gas Processes",
-    "04": "04. Liouville's Theorem & Phase Fluid",
-    "05": "05. 1D Oscillator & Planck Cells",
-    "06": "06. Canonical Energy Fluctuations",
-    "07": "07. The Equipartition Theorem",
-    "08": "08. Grand Canonical Gas & Lattice",
-    "09": "09. Solid–Vapor Equilibrium",
-    "10": "10. Open-System Fluctuations",
-}
-
 LOGO_SVG = """
 <svg width="100%" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -71,15 +58,6 @@ def apply_plot_style():
 
 
 def render_sidebar_header():
-    st.markdown(
-        """
-        <style>
-            [data-testid="stSidebarNav"] { display: none; }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
     root_dir = os.path.dirname(os.path.abspath(__file__))
     logo_png = os.path.join(root_dir, "logo.png")
 
@@ -101,24 +79,6 @@ def render_sidebar_header():
         """,
         unsafe_allow_html=True
     )
-
-    st.sidebar.markdown("### Simulations")
-    st.sidebar.page_link("Home.py", label="🏠 Home — Syllabus Overview")
-
-    pages_dir = os.path.join(root_dir, "pages")
-    if os.path.isdir(pages_dir):
-        py_files = sorted(
-            f for f in os.listdir(pages_dir)
-            if f.endswith(".py") and not f.startswith("__")
-        )
-        for fname in py_files:
-            prefix = fname[:2]
-            nice_label = LABELS_BY_NUM.get(prefix, fname[:-3].replace("_", " "))
-            try:
-                st.sidebar.page_link(f"pages/{fname}", label=nice_label)
-            except Exception:
-                st.sidebar.caption(f"{nice_label} (pending reboot)")
-
     st.sidebar.markdown("---")
 
 
