@@ -1,6 +1,7 @@
 import base64
 import os
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
 import streamlit as st
 
 MODULES = [
@@ -254,6 +255,23 @@ LOGO_SVG = """
 """
 
 
+_ORIGINAL_LEGEND = Axes.legend
+
+def _outside_top_legend(self, *args, **kwargs):
+    # Move all legends cleanly above each subplot so they never overlap curves
+    kwargs["loc"] = "lower left"
+    kwargs["bbox_to_anchor"] = (0.0, 1.02)
+    kwargs["borderaxespad"] = 0.0
+    kwargs["frameon"] = True
+    kwargs["framealpha"] = 0.95
+    kwargs["edgecolor"] = "#cbd5e1"
+    # Push title slightly higher to make room for the legend bar
+    current_title = self.get_title()
+    if current_title:
+        self.set_title(current_title, pad=34)
+    return _ORIGINAL_LEGEND(self, *args, **kwargs)
+
+
 def apply_plot_style():
     plt.rcParams.update({
         "figure.facecolor": "white",
@@ -261,8 +279,10 @@ def apply_plot_style():
         "axes.edgecolor": "#333333",
         "axes.grid": True,
         "grid.alpha": 0.25,
-        "font.size": 11
+        "font.size": 10.5,
+        "legend.fontsize": 8.0,
     })
+    Axes.legend = _outside_top_legend
 
 
 def render_sidebar_header():
