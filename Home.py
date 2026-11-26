@@ -41,7 +41,7 @@ st.info("Select any simulation module from the left sidebar to launch the intera
 st.markdown("---")
 st.markdown(
     """
-    <div style="text-align: center; color: #475569; font-size: 0.9rem;">
+    <div style="text-align: center; color: #94a3b8; font-size: 0.9rem;">
         <strong>Developed by:</strong> Dr. Nibu A George, Associate Professor of Physics, Baselius College Kottayam (Autonomous) | <em>An IQAC Initiative</em>
     </div>
     """,
